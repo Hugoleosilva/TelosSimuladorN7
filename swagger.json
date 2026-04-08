@@ -1,0 +1,133 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Simulator Télos - Movie API",
+    "description": "API para gerenciamento de catálogo de filmes - Nível #7",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor Local"
+    }
+  ],
+  "paths": {
+    "/movies": {
+      "get": {
+        "summary": "Listar tarefas (Filmes)",
+        "description": "Retorna todos os filmes armazenados em memória",
+        "tags": ["Movies"],
+        "responses": {
+          "200": {
+            "description": "Lista de filmes retornada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Movie" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Criar tarefa (Filme)",
+        "description": "Adiciona um novo filme ao catálogo",
+        "tags": ["Movies"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MovieInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Filme criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Movie" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "put": {
+        "summary": "Atualizar tarefa",
+        "description": "Atualiza os dados de um filme existente pelo ID",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID do filme a ser atualizado",
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MovieInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Filme atualizado com sucesso" },
+          "404": { "description": "Filme não encontrado" }
+        }
+      },
+      "delete": {
+        "summary": "Deletar tarefa",
+        "description": "Remove um filme do catálogo pelo ID",
+        "tags": ["Movies"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID do filme a ser removido",
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Filme deletado com sucesso" },
+          "404": { "description": "Filme não encontrado" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Movie": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "title": { "type": "string", "example": "Inception" },
+          "description": { "type": "string", "example": "Um ladrão que rouba segredos corporativos através do uso de tecnologia de compartilhamento de sonhos." },
+          "year": { "type": "integer", "example": 2010 },
+          "genres": { "type": "array", "items": { "type": "string" }, "example": ["Ficção Científica", "Ação"] },
+          "image": { "type": "string", "example": "https://link-da-imagem.com/inception.jpg" },
+          "video": { "type": "string", "example": "https://youtube.com/watch?v=trailer-inception" }
+        }
+      },
+      "MovieInput": {
+        "type": "object",
+        "required": ["title", "description", "year", "genres", "image", "video"],
+        "properties": {
+          "title": { "type": "string", "example": "Interstellar" },
+          "description": { "type": "string", "example": "Uma equipe de exploradores viaja através de um buraco de minhoca no espaço na tentativa de garantir a sobrevivência da humanidade." },
+          "year": { "type": "integer", "example": 2014 },
+          "genres": { "type": "array", "items": { "type": "string" }, "example": ["Drama", "Ficção Científica"] },
+          "image": { "type": "string", "example": "https://link-da-imagem.com/interstellar.jpg" },
+          "video": { "type": "string", "example": "https://youtube.com/watch?v=trailer-interstellar" }
+        }
+      }
+    }
+  }
+}
