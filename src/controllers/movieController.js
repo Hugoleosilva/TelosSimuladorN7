@@ -50,7 +50,7 @@ export const updateMovie = (req, res) => {
     const { id } = req.params;
     const { title, description, year, genres, image, video } = req.body;
     
-    const index = movies.findIndex(m => m.id === parseInt(id));
+    const index = movies.findIndex(movie => movie.id === parseInt(id));
     
     if (index === -1) {
         return res.status(404).json({ message: "Filme não encontrado" });
@@ -74,7 +74,7 @@ export const deleteMovie = (req, res) => {
     const { id } = req.params;
     const initialLength = movies.length;
     
-    movies = movies.filter(m => m.id !== parseInt(id));
+    movies = movies.filter(movie => movie.id !== parseInt(id));
     
     if (movies.length === initialLength) {
         return res.status(404).json({ message: "Filme não encontrado" });
