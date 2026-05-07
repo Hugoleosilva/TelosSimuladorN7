@@ -1,11 +1,18 @@
 import express from 'express';
-import * as movieController from '../controllers/movieController.js';
+import { 
+    getAllMovies, 
+    createMovie, 
+    getMovieById, 
+    updateMovie, 
+    deleteMovie 
+} from '../controllers/movieController.js';
 
 const router = express.Router();
 
-router.post('/movies', movieController.createMovie);         // Criar
-router.get('/movies', movieController.getAllMovies);          // Listar
-router.put('/movies/:id', movieController.updateMovie);       // Atualizar
-router.delete('/movies/:id', movieController.deleteMovie);    // Deletar
+router.get('/', getAllMovies); // Listar todos 
+router.post('/', createMovie); // Salvar novo 
+router.get('/:id', getMovieById); // Listar por ID 
+router.put('/:id', updateMovie); // Atualizar por ID 
+router.delete('/:id', deleteMovie); // Remover por ID 
 
 export default router;

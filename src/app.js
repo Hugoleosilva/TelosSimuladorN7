@@ -1,25 +1,33 @@
 import express from 'express';
-import cors from 'cors';
-import fs from 'fs';
-import swaggerUi from 'swagger-ui-express';
+import connectDB from './config/db.js';
 import movieRoutes from './routes/movieRoutes.js';
+import userRoutes from './routes/userRoutes.js'; // Importação das rotas de usuários
+import swaggerUi from 'swagger-ui-express';
+import { readFileSync } from 'fs';
 
-const swaggerFile = JSON.parse(fs.readFileSync('./swagger.json', 'utf8'));
+// Carrega o arquivo do Swagger para documentação
+const swaggerFile = JSON.parse(readFileSync('./swagger.json', 'utf8'));
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+// 1. Conecta ao Banco de Dados (Requisito #1 do Nível 8)
+connectDB();
 
-// 1. Rota principal redirecionando para o Swagger
-app.get('/', (req, res) => {
-    res.redirect('/api-docs');
-});
+// 2. Middlewares
+app.use(express.json()); // Permite que a API receba dados em formato JSON
 
-// 2. Configuração do Swagger
+// 3. Rotas da API (Endpoints de Persistência)
+app.use('/movies', movieRoutes); // Prefixo para filmes
+app.use('/users', userRoutes);   // Prefixo para usuários
+
+// 4. Documentação Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-// 3. Rotas da API
-app.use(movieRoutes);
+// 5. Inicialização do Servidor
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+    console.log(`- Documentação: http://localhost:${PORT}/api-docs`);
+});
 
 export default app;
