@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Simulator Télos - Movie API",
-    "description": "API para gerenciamento de catálogo de filmes e usuários - Nível #8 (MongoDB)",
+    "description": "API para gerenciamento de catálogo de filmes e usuários - Nível #10 (Segurança JWT)",
     "version": "1.0.0"
   },
   "servers": [
@@ -11,127 +11,14 @@
       "description": "Servidor Local"
     }
   ],
-  "paths": {
-    "/movies": {
-      "get": {
-        "summary": "Listar todos os filmes",
-        "description": "Retorna todos os filmes persistidos no MongoDB Atlas",
-        "tags": ["Movies"],
-        "responses": {
-          "200": {
-            "description": "Lista de filmes recuperada com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Movie" }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Criar novo filme",
-        "description": "Adiciona um filme ao banco de dados",
-        "tags": ["Movies"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/MovieInput" }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Filme criado com sucesso",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Movie" }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/movies/{id}": {
-      "get": {
-        "summary": "Buscar filme por ID",
-        "tags": ["Movies"],
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
-        "responses": {
-          "200": { "description": "Sucesso" },
-          "404": { "description": "Não encontrado" }
-        }
-      },
-      "put": {
-        "summary": "Atualizar filme",
-        "tags": ["Movies"],
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/MovieInput" }
-            }
-          }
-        },
-        "responses": {
-          "200": { "description": "Atualizado" }
-        }
-      },
-      "delete": {
-        "summary": "Deletar filme",
-        "tags": ["Movies"],
-        "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
-        ],
-        "responses": {
-          "204": { "description": "Deletado" }
-        }
-      }
-    },
-    "/users": {
-      "get": {
-        "summary": "Listar todos os usuários",
-        "tags": ["Users"],
-        "responses": {
-          "200": {
-            "description": "Sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/User" }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Criar novo usuário",
-        "tags": ["Users"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/UserInput" }
-            }
-          }
-        },
-        "responses": {
-          "201": { "description": "Usuário criado" }
-        }
-      }
-    }
-  },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "Movie": {
         "type": "object",
@@ -173,6 +60,108 @@
           "email": { "type": "string" },
           "password": { "type": "string" }
         }
+      }
+    }
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Realizar login e obter Token JWT",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "example": "hugo2@email.com" },
+                  "password": { "type": "string", "example": "senhaSegura2123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login realizado com sucesso" },
+          "401": { "description": "Credenciais inválidas" }
+        }
+      }
+    },
+    "/movies": {
+      "get": {
+        "summary": "Listar todos os filmes (Público)",
+        "tags": ["Movies"],
+        "responses": {
+          "200": { "description": "Sucesso" }
+        }
+      },
+      "post": {
+        "summary": "Criar novo filme (Protegido)",
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Movies"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MovieInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Criado com sucesso" },
+          "401": { "description": "Token não fornecido ou inválido" }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "summary": "Buscar filme por ID",
+        "tags": ["Movies"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Sucesso" } }
+      },
+      "put": {
+        "summary": "Atualizar filme (Protegido)",
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Movies"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MovieInput" } } }
+        },
+        "responses": { "200": { "description": "Atualizado" } }
+      },
+      "delete": {
+        "summary": "Deletar filme (Protegido)",
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Movies"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Deletado" } }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Listar usuários (Protegido)",
+        "security": [{ "bearerAuth": [] }],
+        "tags": ["Users"],
+        "responses": { "200": { "description": "Sucesso" } }
+      },
+      "post": {
+        "summary": "Criar novo usuário",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserInput" } } }
+        },
+        "responses": { "201": { "description": "Criado" } }
       }
     }
   }

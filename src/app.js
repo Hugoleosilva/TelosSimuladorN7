@@ -1,33 +1,32 @@
 import express from 'express';
+import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import movieRoutes from './routes/movieRoutes.js';
-import userRoutes from './routes/userRoutes.js'; // Importação das rotas de usuários
+import userRoutes from './routes/userRoutes.js';
+import authRoutes from './routes/authRoutes.js'; // Importando a nova rota
 import swaggerUi from 'swagger-ui-express';
 import { readFileSync } from 'fs';
 
-// Carrega o arquivo do Swagger para documentação
-const swaggerFile = JSON.parse(readFileSync('./swagger.json', 'utf8'));
+// 1. Carrega as variáveis de ambiente antes de tudo
+dotenv.config();
 
-const app = express();
-
-// 1. Conecta ao Banco de Dados (Requisito #1 do Nível 8)
+// 2. Conecta ao Banco de Dados
 connectDB();
 
-// 2. Middlewares
-app.use(express.json()); // Permite que a API receba dados em formato JSON
+// 3. Inicializa o APP (Isso deve vir ANTES de qualquer app.use)
+const app = express();
 
-// 3. Rotas da API (Endpoints de Persistência)
-app.use('/movies', movieRoutes); // Prefixo para filmes
-app.use('/users', userRoutes);   // Prefixo para usuários
+// 4. Middlewares Globais
+app.use(express.json());
 
-// 4. Documentação Swagger
+// 5. Definição das Rotas
+app.use('/auth', authRoutes);   // Rota de Login (Nível 9)
+app.use('/movies', movieRoutes); 
+app.use('/users', userRoutes);
+
+// 6. Configuração do Swagger
+const swaggerFile = JSON.parse(readFileSync('./swagger.json', 'utf8'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-// 5. Inicialização do Servidor
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
-    console.log(`- Documentação: http://localhost:${PORT}/api-docs`);
-});
-
+// 7. Exporta o app para o server.js
 export default app;
