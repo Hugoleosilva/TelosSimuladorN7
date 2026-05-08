@@ -2,13 +2,13 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Simulator Télos - Movie API",
-    "description": "API para gerenciamento de catálogo de filmes e usuários - Nível #10 (Segurança JWT)",
+    "description": "API for managing movie and user catalogs",
     "version": "1.0.0"
   },
   "servers": [
     {
       "url": "http://localhost:3000",
-      "description": "Servidor Local"
+      "description": "Local Server"
     }
   ],
   "components": {
@@ -67,7 +67,7 @@
     "/auth/login": {
       "post": {
         "tags": ["Auth"],
-        "summary": "Realizar login e obter Token JWT",
+        "summary": "Log in and obtain a JWT Token",
         "requestBody": {
           "required": true,
           "content": {
@@ -84,21 +84,21 @@
           }
         },
         "responses": {
-          "200": { "description": "Login realizado com sucesso" },
-          "401": { "description": "Credenciais inválidas" }
+          "200": { "description": "Login successful" },
+          "401": { "description": "Invalid credentials" }
         }
       }
     },
     "/movies": {
       "get": {
-        "summary": "Listar todos os filmes (Público)",
+        "summary": "List all movies (Public)",
         "tags": ["Movies"],
         "responses": {
-          "200": { "description": "Sucesso" }
+          "200": { "description": "Success" }
         }
       },
       "post": {
-        "summary": "Criar novo filme (Protegido)",
+        "summary": "Create new movie (Protected)",
         "security": [{ "bearerAuth": [] }],
         "tags": ["Movies"],
         "requestBody": {
@@ -110,22 +110,22 @@
           }
         },
         "responses": {
-          "201": { "description": "Criado com sucesso" },
-          "401": { "description": "Token não fornecido ou inválido" }
+          "201": { "description": "Created successfully" },
+          "401": { "description": "Token not provided or invalid" }
         }
       }
     },
     "/movies/{id}": {
       "get": {
-        "summary": "Buscar filme por ID",
+        "summary": "Search for movie by ID",
         "tags": ["Movies"],
         "parameters": [
           { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
-        "responses": { "200": { "description": "Sucesso" } }
+        "responses": { "200": { "description": "Sucess" } }
       },
       "put": {
-        "summary": "Atualizar filme (Protegido)",
+        "summary": "Update movie (Protected)",
         "security": [{ "bearerAuth": [] }],
         "tags": ["Movies"],
         "parameters": [
@@ -135,33 +135,33 @@
           "required": true,
           "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MovieInput" } } }
         },
-        "responses": { "200": { "description": "Atualizado" } }
+        "responses": { "200": { "description": "Updated" } }
       },
       "delete": {
-        "summary": "Deletar filme (Protegido)",
+        "summary": "Delete movie (Protected)",
         "security": [{ "bearerAuth": [] }],
         "tags": ["Movies"],
         "parameters": [
           { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
         ],
-        "responses": { "204": { "description": "Deletado" } }
+        "responses": { "204": { "description": "Deleted" } }
       }
     },
     "/users": {
       "get": {
-        "summary": "Listar usuários (Protegido)",
+        "summary": "List users (Protected)",
         "security": [{ "bearerAuth": [] }],
         "tags": ["Users"],
-        "responses": { "200": { "description": "Sucesso" } }
+        "responses": { "200": { "description": "Sucess" } }
       },
       "post": {
-        "summary": "Criar novo usuário",
+        "summary": "Create new user",
         "tags": ["Users"],
         "requestBody": {
           "required": true,
           "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserInput" } } }
         },
-        "responses": { "201": { "description": "Criado" } }
+        "responses": { "201": { "description": "Created" } }
       }
     }
   }

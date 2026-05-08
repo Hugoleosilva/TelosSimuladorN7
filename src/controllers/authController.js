@@ -11,13 +11,13 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "Incorrect email or password" });
         }
 
-        // 2. Comparar a senha usando o método que criamos no Model
+        // 2. Comparar a senha usando o método criado no Model
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
             return res.status(401).json({ message: "Incorrect email or password" });
         }
 
-        // 3. Gerar o Token JWT (usando a SECRET do seu .env)
+        // 3. Gerar o Token JWT (usando a SECRET do .env)
         const token = jwt.sign(
             { id: user._id, role: user.role },
             process.env.JWT_SECRET,

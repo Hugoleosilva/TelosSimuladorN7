@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());
 
 // 5. Definição das Rotas
-app.use('/auth', authRoutes);   // Rota de Login (Nível 9)
+app.use('/auth', authRoutes);   // Rota de Login
 app.use('/movies', movieRoutes); 
 app.use('/users', userRoutes);
 

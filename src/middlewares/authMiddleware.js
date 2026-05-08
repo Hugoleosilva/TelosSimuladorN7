@@ -8,7 +8,7 @@ export const authMiddleware = (req, res, next) => {
         return res.status(401).json({ message: "Token not provided or access denied" });
     }
 
-    // 2. O token geralmente vem como "Bearer <token>", então dividimos a string
+    // 2. O token geralmente vem como "Bearer <token>", então dividiu-se a string
     const parts = authHeader.split(' ');
 
     if (parts.length !== 2) {
@@ -17,7 +17,7 @@ export const authMiddleware = (req, res, next) => {
 
     const [scheme, token] = parts;
 
-    // 3. Valida o token usando a sua chave secreta do .env
+    // 3. Valida o token usando a chave secreta do .env
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             return res.status(401).json({ message: "Invalid or expired token" });

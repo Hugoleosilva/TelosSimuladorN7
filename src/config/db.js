@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-// Carrega as variáveis do arquivo .env que você acabou de criar
+// Carrega as variáveis do arquivo .env que acabaram de ser criadas
 dotenv.config();
 
 const connectDB = async () => {

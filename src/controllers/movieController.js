@@ -1,4 +1,4 @@
-import Movie from '../models/Movie.js'; // Importa o Schema que você criou 
+import Movie from '../models/Movie.js'; // Importa o Schema que criado 
 
 // GET /movies - Listar todos os filmes do banco 
 export const getAllMovies = async (req, res) => {
