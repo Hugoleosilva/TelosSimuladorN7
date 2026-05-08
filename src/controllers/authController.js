@@ -8,13 +8,13 @@ export const login = async (req, res) => {
         // 1. Procurar o usuário pelo email
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: "E-mail ou senha incorretos" });
+            return res.status(401).json({ message: "Incorrect email or password" });
         }
 
         // 2. Comparar a senha usando o método que criamos no Model
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).json({ message: "E-mail ou senha incorretos" });
+            return res.status(401).json({ message: "Incorrect email or password" });
         }
 
         // 3. Gerar o Token JWT (usando a SECRET do seu .env)
@@ -34,6 +34,6 @@ export const login = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: "Erro no servidor", error: error.message });
+        res.status(500).json({ message: "Server error", error: error.message });
     }
 };

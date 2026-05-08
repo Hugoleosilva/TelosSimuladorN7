@@ -6,7 +6,7 @@ export const getAllUsers = async (req, res) => {
         const users = await User.find();
         res.status(200).json(users);
     } catch (error) {
-        res.status(500).json({ message: "Erro ao buscar usuários", error: error.message });
+        res.status(500).json({ message: "Error searching for users", error: error.message });
     }
 };
 
@@ -18,7 +18,7 @@ export const createUser = async (req, res) => {
         await newUser.save();
         res.status(201).json(newUser);
     } catch (error) {
-        res.status(400).json({ message: "Erro ao criar usuário", error: error.message });
+        res.status(400).json({ message: "Error creating user", error: error.message });
     }
 };
 
@@ -26,9 +26,9 @@ export const createUser = async (req, res) => {
 export const getUserById = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({ message: "Usuário não encontrado" });
+        if (!user) return res.status(404).json({ message: "User not found" });
         res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ message: "Erro na busca", error: error.message });
+        res.status(500).json({ message: "Search error", error: error.message });
     }
 };

@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', getAllMovies);
 router.get('/:id', getMovieById);
 
-// ROTAS PROTEGIDAS: Note que o authMiddleware vem antes do controller
+// ROTAS PROTEGIDAS: O authMiddleware vem antes do controller
 router.post('/', authMiddleware, createMovie); 
 router.put('/:id', authMiddleware, updateMovie);
 router.delete('/:id', authMiddleware, deleteMovie);

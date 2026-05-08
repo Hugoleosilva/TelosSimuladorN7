@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     timestamps: true 
 });
 
-// --- LÓGICA DE SEGURANÇA (HOOK PRE-SAVE) ---
+// LÓGICA DE SEGURANÇA (HOOK PRE-SAVE)
 // Esta versão usa async/await sem o parâmetro 'next' para evitar o erro "next is not a function"
 userSchema.pre('save', async function () {
     // Se a senha não foi modificada, não faz nada e sai
@@ -39,7 +39,7 @@ userSchema.pre('save', async function () {
     }
 });
 
-// --- MÉTODO DE COMPARAÇÃO (Para ser usado no Controller de Login) ---
+// MÉTODO DE COMPARAÇÃO (Para ser usado no Controller de Login)
 userSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
